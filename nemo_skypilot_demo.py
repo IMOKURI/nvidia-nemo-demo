@@ -25,7 +25,7 @@ def common_envs():
 
 def skypilot_executor(container_image: str, gpus_per_node: int = 2):
     return run.SkypilotExecutor(
-        gpus="NVIDIA-L40S",
+        gpus="L40S",
         gpus_per_node=gpus_per_node,
         env_vars=common_envs(),
         container_image=container_image,

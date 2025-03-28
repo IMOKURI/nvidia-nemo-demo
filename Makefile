@@ -8,8 +8,33 @@ help: ## Show this help
 export
 NOW = $(shell date '+%Y%m%d-%H%M%S')
 
-.PHONY: run
-run: ## run
+#######################################################################################################################
+# nemo-run
+#######################################################################################################################
+IMAGE_NAME = imokuri123/nemo-run
+IMAGE_TAG = v0.0.1
+
+build-nemo-run: ## Build nemo-run.
+	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile.nemo-run .
+
+push-nemo-run: ## Push nemo-run.
+	docker push $(IMAGE_NAME):$(IMAGE_TAG)
+
+run: ## Run nemo-run.
 	docker run -it --rm -u 1000 -v $(HOME)/.kube:/home/ubuntu/.kube -v $(PWD):/app -w /app \
-		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 imokuri123/nemo-jupyter:v0.0.6 bash
+		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 $(IMAGE_NAME):$(IMAGE_TAG) bash
+
+
+
+#######################################################################################################################
+# nemo-executor
+#######################################################################################################################
+EXE_IMAGE_NAME = imokuri123/nemo-executor
+EXE_IMAGE_TAG = v0.0.1
+
+build-nemo-executor: ## Build nemo-executor.
+	docker build -t $(EXE_IMAGE_NAME):$(EXE_IMAGE_TAG) -f Dockerfile.nemo-executor .
+
+push-nemo-executor: ## Push nemo-executor.
+	docker push $(EXE_IMAGE_NAME):$(EXE_IMAGE_TAG)
 

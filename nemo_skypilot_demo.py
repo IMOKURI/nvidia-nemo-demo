@@ -25,12 +25,11 @@ def common_envs():
 
 def skypilot_executor(container_image: str, gpus_per_node: int = 2):
     return run.SkypilotExecutor(
-        gpus="L40S",
+        gpus="L40S",  # sky show-gpus コマンドで確認
         gpus_per_node=gpus_per_node,
         env_vars=common_envs(),
         container_image=container_image,
         cloud="kubernetes",
-        # Optional to reuse Skypilot cluster
         cluster_name="tester",
         setup="""
         conda deactivate
@@ -42,7 +41,7 @@ def skypilot_executor(container_image: str, gpus_per_node: int = 2):
 
 def main():
     recipe = configure_recipe()
-    executor = skypilot_executor(container_image="imokuri123/nemo-jupyter:v0.0.3")
+    executor = skypilot_executor(container_image="imokuri123/nemo-jupyter:v0.0.5")
 
     run.run(recipe, executor=executor, name="nemotron3_4b_pretraining")
 

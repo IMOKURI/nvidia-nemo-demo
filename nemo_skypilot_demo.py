@@ -41,7 +41,7 @@ def skypilot_executor(container_image: str, gpus_per_node: int = 2):
 
 def main():
     recipe = configure_recipe()
-    executor = skypilot_executor(container_image="imokuri123/nemo-jupyter:v0.0.5")
+    executor = skypilot_executor(container_image="imokuri123/nemo-jupyter:v0.0.6")
 
     run.run(recipe, executor=executor, name="nemotron3_4b_pretraining")
 

@@ -11,5 +11,5 @@ NOW = $(shell date '+%Y%m%d-%H%M%S')
 .PHONY: run
 run: ## run
 	docker run -it --rm -u 1000 -v $(HOME)/.kube:/home/ubuntu/.kube -v $(PWD):/app -w /app \
-		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 imokuri123/nemo-jupyter:v0.0.5 bash
+		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 imokuri123/nemo-jupyter:v0.0.6 bash
 

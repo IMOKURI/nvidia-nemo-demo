@@ -30,7 +30,7 @@ run: ## Run nemo-run.
 # nemo-executor
 #######################################################################################################################
 EXE_IMAGE_NAME = imokuri123/nemo-executor
-EXE_IMAGE_TAG = v0.0.1
+EXE_IMAGE_TAG = v0.0.2
 
 build-nemo-executor: ## Build nemo-executor.
 	docker build -t $(EXE_IMAGE_NAME):$(EXE_IMAGE_TAG) -f Dockerfile.nemo-executor .

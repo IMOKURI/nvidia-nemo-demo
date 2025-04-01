@@ -21,7 +21,7 @@ push-nemo-run: ## Push nemo-run.
 	docker push $(IMAGE_NAME):$(IMAGE_TAG)
 
 run: ## Run nemo-run.
-	docker run -it --rm -v $(HOME)/.kube:/root/.kube -v $(PWD):/app -w /app \
+	docker run -it --rm -v $(HOME)/.kube:/root/.kube -v $(HOME)/.gitconfig:/root/.gitconfig -v $(PWD):/app -w /app \
 		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 $(IMAGE_NAME):$(IMAGE_TAG) bash
 
 
@@ -30,7 +30,7 @@ run: ## Run nemo-run.
 # nemo-executor
 #######################################################################################################################
 EXE_IMAGE_NAME = imokuri123/nemo-executor
-EXE_IMAGE_TAG = v0.0.2
+EXE_IMAGE_TAG = v0.0.3
 
 build-nemo-executor: ## Build nemo-executor.
 	docker build -t $(EXE_IMAGE_NAME):$(EXE_IMAGE_TAG) -f Dockerfile.nemo-executor .

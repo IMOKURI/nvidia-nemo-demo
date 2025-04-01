@@ -21,7 +21,7 @@ push-nemo-run: ## Push nemo-run.
 	docker push $(IMAGE_NAME):$(IMAGE_TAG)
 
 run: ## Run nemo-run.
-	docker run -it --rm -u 1000 -v $(HOME)/.kube:/home/ubuntu/.kube -v $(PWD):/app -w /app \
+	docker run -it --rm -v $(HOME)/.kube:/root/.kube -v $(PWD):/app -w /app \
 		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 $(IMAGE_NAME):$(IMAGE_TAG) bash
 
 

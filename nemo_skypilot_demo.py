@@ -44,11 +44,11 @@ def skypilot_executor(container_image: str, gpus_per_node: int = 2):
         env_vars=common_envs(),
         container_image=container_image,
         cloud="kubernetes",
-        cluster_name="tester",
+        cluster_name="nemo_demo",
+        file_mounts={"/nemo_app": "/app"},  # なにかマウントしておかないと、/nemo_runもマウント失敗しているよう。
         setup="""
         conda deactivate
         nvidia-smi
-        ls -al ./
         """,
     )
 

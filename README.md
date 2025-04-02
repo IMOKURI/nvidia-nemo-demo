@@ -6,21 +6,21 @@
 
 ## Requirements
 
-- ~/.kube/config
+- `~/.kube/config`
     - [Minimum permissions required for SkyPilot](https://docs.skypilot.co/en/latest/cloud-setup/cloud-permissions/kubernetes.html)
-- ~/.gitconfig
-    - Add /app as safe directory
-    ```bash
-    git config --global --add safe.directory /app
-    ```
+- `~/.gitconfig`
+    - Add `/app` as safe directory
+      ```bash
+      git config --global --add safe.directory /app
+      ```
 
 ## How to Run
 
 - Run client container
-```bash
-make run
-```
+  ```bash
+  make run
+  ```
 - Run NeMo program
-```bash
-python nemo_skypilot_demo.py
-```
+  ```bash
+  python nemo_skypilot_demo.py
+  ```

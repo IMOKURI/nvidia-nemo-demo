@@ -17,9 +17,12 @@ IMAGE_TAG = v0.0.3
 build-nemo-run: ## Build nemo-run.
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile .
 
-push-nemo-run: ## Push nemo-run.
-	docker push $(IMAGE_NAME):$(IMAGE_TAG)
-
 run: ## Run nemo-run.
-	docker run -it --rm -v $(HOME)/.kube:/root/.kube -v $(HOME)/.gitconfig:/root/.gitconfig -v $(PWD):/app -w /app \
-		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 $(IMAGE_NAME):$(IMAGE_TAG) bash
+	docker run -it --rm \
+		-v $(HOME)/.kube:/root/.kube \
+		-v $(HOME)/.gitconfig:/root/.gitconfig \
+		-v $(PWD):/app \
+		-w /app \
+		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 \
+		$(IMAGE_NAME):$(IMAGE_TAG) \
+		bash

@@ -1,6 +1,20 @@
-import nemo_run as run
+import logging
 
+import nemo_run as run
 from nemo.collections import llm
+
+from simple.add import SomeObject, add_object, commonly_used_object
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
+
+
+def configure_fn():
+    fn = run.Partial(
+        add_object,
+        obj_1=commonly_used_object(),
+        obj_2=run.Config(SomeObject, value_1=10, value_2=20, value_3=30),
+    )
+    return fn
 
 
 def configure_recipe(nodes: int = 1, gpus_per_node: int = 2):
@@ -40,10 +54,11 @@ def skypilot_executor(container_image: str, gpus_per_node: int = 2):
 
 
 def main():
-    recipe = configure_recipe()
+    fn = configure_fn()
+    # recipe = configure_recipe()
     executor = skypilot_executor(container_image="imokuri123/nemo-executor:v0.0.3")
 
-    run.run(recipe, executor=executor, name="nemotron3_4b_pretraining")
+    run.run(fn, executor=executor, name="nemotron3_4b_pretraining")
 
 
 if __name__ == "__main__":

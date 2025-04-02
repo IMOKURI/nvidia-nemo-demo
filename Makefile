@@ -12,7 +12,7 @@ NOW = $(shell date '+%Y%m%d-%H%M%S')
 # nemo-run
 #######################################################################################################################
 IMAGE_NAME = imokuri123/nemo-run
-IMAGE_TAG = v0.0.1
+IMAGE_TAG = v0.0.3
 
 build-nemo-run: ## Build nemo-run.
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile.nemo-run .
@@ -30,7 +30,7 @@ run: ## Run nemo-run.
 # nemo-executor
 #######################################################################################################################
 EXE_IMAGE_NAME = imokuri123/nemo-executor
-EXE_IMAGE_TAG = v0.0.3
+EXE_IMAGE_TAG = v0.0.5
 
 build-nemo-executor: ## Build nemo-executor.
 	docker build -t $(EXE_IMAGE_NAME):$(EXE_IMAGE_TAG) -f Dockerfile.nemo-executor .

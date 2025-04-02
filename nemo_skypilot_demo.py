@@ -56,7 +56,7 @@ def skypilot_executor(container_image: str, gpus_per_node: int = 2):
 def main():
     fn = configure_fn()
     # recipe = configure_recipe()
-    executor = skypilot_executor(container_image="imokuri123/nemo-executor:v0.0.3")
+    executor = skypilot_executor(container_image="imokuri123/nemo-executor:v0.0.5")
 
     run.run(fn, executor=executor, name="nemotron3_4b_pretraining")
 

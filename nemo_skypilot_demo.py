@@ -17,7 +17,10 @@ def configure_fn():
     return fn
 
 
-def configure_recipe(gpus_per_node, num_nodes):
+def configure_recipe(gpus_per_node, num_nodes) -> run.Partial:
+    """
+    https://github.com/NVIDIA/NeMo/blob/main/nemo/collections/llm/recipes/nemotron3_4b.py
+    """
     recipe = llm.nemotron3_4b.pretrain_recipe(
         dir="/checkpoints/nemotron",  # Path to store checkpoints
         name="nemotron_pretraining",
@@ -28,7 +31,7 @@ def configure_recipe(gpus_per_node, num_nodes):
     )
 
     # Add overrides here
-    recipe.trainer.val_check_interval = 100
+    recipe.trainer.val_check_interval = 2
 
     return recipe
 

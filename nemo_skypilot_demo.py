@@ -57,12 +57,14 @@ def main():
     gpus_per_node = 4
     num_nodes = 1
 
-    # fn = configure_fn()
+    fn = configure_fn()
     recipe = configure_recipe(gpus_per_node, num_nodes)
-    executor = skypilot_executor("imokuri123/nemo-executor:v0.0.5", gpus_per_node)
+    executor = skypilot_executor("nvcr.io/nvidia/nemo:25.02.01", gpus_per_node)
 
-    # run.run(fn, executor=executor, name="add_object")
-    run.run(recipe, executor=executor, name="nemotron3_4b_pretraining")
+    with run.Experiment("nemo_demo", executor=executor) as experiment:
+        experiment.add(fn, tail_logs=True)
+        experiment.add(recipe, tail_logs=True)
+        experiment.run()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,12 @@
 import logging
 
 import nemo_run as run
-from nemo.collections import llm
+from nemo.collections.llm.api import pretrain
+from nemo.collections.llm.gpt.data import MockDataModule, PreTrainingDataModule
+from nemo.collections.llm.recipes.log.default import default_log, default_resume, tensorboard_logger
+from nemo.collections.llm.recipes.nemotron import nemotron_model, nemotron_trainer
+from nemo.collections.llm.recipes.optim.adam import distributed_fused_adam_with_cosine_annealing
+from nemo.utils.exp_manager import TimingCallback
 
 from simple.add import SomeObject, add_object, commonly_used_object
 
@@ -21,13 +26,55 @@ def configure_recipe(gpus_per_node, num_nodes) -> run.Partial:
     """
     https://github.com/NVIDIA/NeMo/blob/main/nemo/collections/llm/recipes/nemotron3_4b.py
     """
-    recipe = llm.nemotron3_4b.pretrain_recipe(
-        dir="/checkpoints/nemotron",  # Path to store checkpoints
-        name="nemotron_pretraining",
-        tensor_parallelism=gpus_per_node,
-        num_nodes=num_nodes,
-        num_gpus_per_node=gpus_per_node,
-        max_steps=2,  # Setting a small value for the quickstart
+    dir = "/checkpoints/nemotron"
+    name = "nemotron_pretraining"
+    precision = "bf16-mixed"
+
+    recipe = run.Partial(
+        pretrain,
+        model=nemotron_model("nemotron3_4b"),
+        trainer=nemotron_trainer(
+            tensor_parallelism=gpus_per_node,
+            pipeline_parallelism=1,
+            pipeline_parallelism_type=None,
+            virtual_pipeline_parallelism=None,
+            context_parallelism=1,
+            sequence_parallelism=False,
+            num_nodes=num_nodes,
+            num_gpus_per_node=gpus_per_node,
+            max_steps=2,
+            precision=precision,
+            accumulate_grad_batches=1,
+            limit_test_batches=32,
+            limit_val_batches=32,
+            log_every_n_steps=1,
+            val_check_interval=2,
+            callbacks=[run.Config(TimingCallback)],
+        ),
+        # data=PreTrainingDataModule(
+        #     paths=["/app/data/mc4-ja-tfrecord"],
+        #     seq_length=4096,
+        #     micro_batch_size=2,
+        #     global_batch_size=32,
+        #     dataset_kwargs={},
+        #     split="80,10,10",
+        # ),
+        data=run.Config(
+            MockDataModule,
+            seq_length=4096,
+            global_batch_size=32,
+            micro_batch_size=2,
+        ),
+        log=default_log(dir=dir, name=name, tensorboard_logger=tensorboard_logger(name=name)),
+        optim=distributed_fused_adam_with_cosine_annealing(
+            precision=precision,
+            warmup_steps=500,
+            constant_steps=0,
+            min_lr=3e-5,
+            max_lr=3e-4,
+            clip_grad=1.0,
+        ),
+        resume=default_resume(),
     )
 
     # Add overrides here

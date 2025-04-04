@@ -2,7 +2,7 @@ import logging
 
 import nemo_run as run
 from nemo.collections.llm.api import pretrain
-from nemo.collections.llm.gpt.data import MockDataModule, PreTrainingDataModule
+from nemo.collections.llm.gpt.data import PreTrainingDataModule
 from nemo.collections.llm.recipes.log.default import default_log, default_resume, tensorboard_logger
 from nemo.collections.llm.recipes.nemotron import nemotron_model, nemotron_trainer
 from nemo.collections.llm.recipes.optim.adam import distributed_fused_adam_with_cosine_annealing
@@ -51,19 +51,13 @@ def configure_recipe(gpus_per_node, num_nodes) -> run.Partial:
             val_check_interval=2,
             callbacks=[run.Config(TimingCallback)],
         ),
-        # data=PreTrainingDataModule(
-        #     paths=["/app/data/mc4-ja-tfrecord"],
-        #     seq_length=4096,
-        #     micro_batch_size=2,
-        #     global_batch_size=32,
-        #     dataset_kwargs={},
-        #     split="80,10,10",
-        # ),
         data=run.Config(
-            MockDataModule,
+            PreTrainingDataModule,
+            paths=["/app/data/mc4-ja-tfrecord"],
             seq_length=4096,
             global_batch_size=32,
             micro_batch_size=2,
+            split="80,10,10",
         ),
         log=default_log(dir=dir, name=name, tensorboard_logger=tensorboard_logger(name=name)),
         optim=distributed_fused_adam_with_cosine_annealing(

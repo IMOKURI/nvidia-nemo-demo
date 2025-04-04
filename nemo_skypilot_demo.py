@@ -45,15 +45,15 @@ def configure_recipe(gpus_per_node, num_nodes) -> run.Partial:
             max_steps=2,
             precision=precision,
             accumulate_grad_batches=1,
-            limit_test_batches=32,
-            limit_val_batches=32,
+            limit_test_batches=2,
+            limit_val_batches=2,
             log_every_n_steps=1,
             val_check_interval=2,
             callbacks=[run.Config(TimingCallback)],
         ),
         data=run.Config(
             PreTrainingDataModule,
-            paths=["/app/data/mc4-ja-tfrecord"],
+            paths=["/nemo_data/mc4-ja-tfrecord_text_document"],
             seq_length=4096,
             global_batch_size=32,
             micro_batch_size=2,
@@ -89,7 +89,7 @@ def skypilot_executor(container_image, gpus_per_node):
         container_image=container_image,
         cloud="kubernetes",
         cluster_name="nemo_demo",
-        file_mounts={"/nemo_app": "/app"},  # なにかマウントしておかないと、/nemo_runのマウントも失敗しているよう。
+        file_mounts={"/nemo_data": "/app/data"},  # なにかマウントしておかないと、/nemo_runのマウントも失敗しているよう。
         setup="""
         conda deactivate
         nvidia-smi

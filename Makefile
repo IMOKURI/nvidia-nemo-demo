@@ -14,10 +14,12 @@ NOW = $(shell date '+%Y%m%d-%H%M%S')
 IMAGE_NAME = imokuri123/nemo-run
 IMAGE_TAG = v0.0.3
 
-build-nemo-run: ## Build nemo-run.
+.PHONY: build
+build: ## Build nemo-run container
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile .
 
-run: ## Run nemo-run.
+.PHONY: up
+up: ## Start nemo-run container
 	docker run -it --rm \
 		-v $(HOME)/.kube:/root/.kube \
 		-v $(HOME)/.gitconfig:/root/.gitconfig \
@@ -26,3 +28,11 @@ run: ## Run nemo-run.
 		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 \
 		$(IMAGE_NAME):$(IMAGE_TAG) \
 		bash
+
+.PHONY: run
+run: ## Run application
+	python ./nemo_skypilot_demo.py
+
+.PHONY: down
+down: ## Down skypilot cluster
+	sky down --yes nemo_demo

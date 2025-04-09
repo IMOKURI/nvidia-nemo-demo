@@ -97,6 +97,7 @@ def configure_auto_model_recipe(gpus_per_node, num_nodes) -> run.Partial:
     model_name = "Qwen/Qwen2.5-1.5B"
     peft_scheme = "lora"  # or None
 
+    tokenizer = llm.HFAutoModelForCausalLM.configure_tokenizer(model_name)
     recipe = run.Partial(
         finetune,
         model=run.Config(
@@ -105,7 +106,6 @@ def configure_auto_model_recipe(gpus_per_node, num_nodes) -> run.Partial:
             load_pretrained_weights=True,
             trust_remote_code=False,
             attn_implementation="sdpa",
-            use_linear_ce_loss=True,
         ),
         trainer=run.Config(
             nl.Trainer,
@@ -126,6 +126,7 @@ def configure_auto_model_recipe(gpus_per_node, num_nodes) -> run.Partial:
             SquadHFDataModule,
             path_or_dataset="rajpurkar/squad",
             split="train",
+            pad_token_id=tokenizer.tokenizer.eos_token_id,
             tokenizer=run.Config(AutoTokenizer, pretrained_model_name=model_name),
         ),
         log=default_log(dir=dir, name=name, tensorboard_logger=tensorboard_logger(name=name)),

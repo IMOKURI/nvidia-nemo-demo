@@ -1,6 +1,7 @@
 import logging
 
 import nemo_run as run
+from nemo.collections import llm
 from nemo.collections.llm.api import pretrain
 from nemo.collections.llm.gpt.data import PreTrainingDataModule
 from nemo.collections.llm.recipes.log.default import default_log, default_resume, tensorboard_logger
@@ -77,6 +78,32 @@ def configure_recipe(gpus_per_node, num_nodes) -> run.Partial:
     return recipe
 
 
+def configure_auto_model_recipe(gpus_per_node, num_nodes) -> run.Partial:
+    """
+    https://github.com/NVIDIA/NeMo/blob/main/nemo/collections/llm/recipes/hf_auto_model_for_causal_lm.py
+    Note:
+        This recipe uses the SQuAD dataset for fine-tuning.
+    """
+    recipe = llm.hf_auto_model_for_causal_lm.finetune_recipe(
+        model_name="Qwen/Qwen2.5-1.5B",  # The Hugging Face model-id or path to a local checkpoint (HF-native format).
+        dir="/checkpoints/qwen2.5-1.5b",  # Path to store checkpoints
+        name="qwen2.5_lora",
+        num_nodes=num_nodes,
+        num_gpus_per_node=gpus_per_node,
+        peft_scheme="lora",
+        # Note: "lora" is the default peft_scheme.
+        # Supported values are "lora", "none"/None (full fine-tuning).
+    )
+
+    # Override your PEFT configuration here, if needed. Regexp-like format is also supported,
+    # to match all modules ending in `_proj` use `*_proj`. For example:
+    recipe.peft.target_modules = ["linear_qkv", "linear_proj", "linear_fc1", "*_proj"]
+    recipe.peft.dim = 16
+    recipe.peft.alpha = 32
+
+    return recipe
+
+
 def common_envs():
     return {}
 
@@ -89,7 +116,9 @@ def skypilot_executor(container_image, gpus_per_node):
         container_image=container_image,
         cloud="kubernetes",
         cluster_name="nemo_demo",
-        file_mounts={"/nemo_data": "/app/data"},  # なにかマウントしておかないと、/nemo_runのマウントも失敗しているよう。
+        file_mounts={
+            "/nemo_data": "/app/data"
+        },  # なにかマウントしておかないと、/nemo_runのマウントも失敗しているよう。
         setup="""
         conda deactivate
         nvidia-smi
@@ -102,7 +131,8 @@ def main():
     num_nodes = 1
 
     fn = configure_fn()
-    recipe = configure_recipe(gpus_per_node, num_nodes)
+    # recipe = configure_recipe(gpus_per_node, num_nodes)
+    recipe = configure_auto_model_recipe(gpus_per_node, num_nodes)
     executor = skypilot_executor("nvcr.io/nvidia/nemo:25.02.01", gpus_per_node)
 
     with run.Experiment("nemo_demo", executor=executor) as experiment:

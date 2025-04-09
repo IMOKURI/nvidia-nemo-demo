@@ -1,12 +1,20 @@
 import logging
 
 import nemo_run as run
+from nemo import lightning as nl
 from nemo.collections import llm
-from nemo.collections.llm.api import pretrain
+from nemo.collections.common.tokenizers.huggingface.auto_tokenizer import AutoTokenizer
+from nemo.collections.llm.api import finetune, pretrain
 from nemo.collections.llm.gpt.data import PreTrainingDataModule
+from nemo.collections.llm.gpt.data.hf_dataset import SquadHFDataModule
+from nemo.collections.llm.gpt.model.hf_auto_model_for_causal_lm import HFAutoModelForCausalLM
+from nemo.collections.llm.peft.lora import LoRA
 from nemo.collections.llm.recipes.log.default import default_log, default_resume, tensorboard_logger
 from nemo.collections.llm.recipes.nemotron import nemotron_model, nemotron_trainer
-from nemo.collections.llm.recipes.optim.adam import distributed_fused_adam_with_cosine_annealing
+from nemo.collections.llm.recipes.optim.adam import (
+    distributed_fused_adam_with_cosine_annealing,
+    pytorch_adam_with_cosine_annealing,
+)
 from nemo.utils.exp_manager import TimingCallback
 
 from simple.add import SomeObject, add_object, commonly_used_object
@@ -84,16 +92,53 @@ def configure_auto_model_recipe(gpus_per_node, num_nodes) -> run.Partial:
     Note:
         This recipe uses the SQuAD dataset for fine-tuning.
     """
-    recipe = llm.hf_auto_model_for_causal_lm.finetune_recipe(
-        model_name="Qwen/Qwen2.5-1.5B",  # The Hugging Face model-id or path to a local checkpoint (HF-native format).
-        dir="/checkpoints/qwen2.5-1.5b",  # Path to store checkpoints
-        name="qwen2.5_lora",
-        num_nodes=num_nodes,
-        num_gpus_per_node=gpus_per_node,
-        peft_scheme="lora",
-        # Note: "lora" is the default peft_scheme.
-        # Supported values are "lora", "none"/None (full fine-tuning).
+    dir = "/checkpoints/qwen2.5-1.5b"
+    name = "qwen2.5_lora"
+    model_name = "Qwen/Qwen2.5-1.5B"
+    peft_scheme = "lora"  # or None
+
+    recipe = run.Partial(
+        finetune,
+        model=run.Config(
+            HFAutoModelForCausalLM,
+            model_name=model_name,
+            load_pretrained_weights=True,
+            trust_remote_code=False,
+            attn_implementation="sdpa",
+            use_linear_ce_loss=True,
+        ),
+        trainer=run.Config(
+            nl.Trainer,
+            num_nodes=num_nodes,
+            devices=gpus_per_node,
+            max_steps=100,
+            accelerator="gpu",
+            strategy="ddp",
+            log_every_n_steps=1,
+            limit_val_batches=0.0,
+            num_sanity_val_steps=0,
+            accumulate_grad_batches=10,
+            callbacks=[run.Config(TimingCallback)],
+            gradient_clip_val=1.0,
+            use_distributed_sampler=False,
+        ),
+        data=run.Config(
+            SquadHFDataModule,
+            path_or_dataset="rajpurkar/squad",
+            split="train",
+            tokenizer=run.Config(AutoTokenizer, pretrained_model_name=model_name),
+        ),
+        log=default_log(dir=dir, name=name, tensorboard_logger=tensorboard_logger(name=name)),
+        optim=pytorch_adam_with_cosine_annealing(max_lr=3e-4),
+        resume=default_resume(),
     )
+    if peft_scheme is None or peft_scheme.lower() == "none":
+        recipe.optim.optimizer_fn.lr = 5e-6
+    elif peft_scheme.lower() == "lora":
+        recipe.peft = run.Config(LoRA, target_modules=["*_proj"])
+        recipe.optim.optimizer_fn.lr = 1e-4
+    else:
+        raise ValueError(f"Unrecognized peft scheme: {peft_scheme}")
 
     # Override your PEFT configuration here, if needed. Regexp-like format is also supported,
     # to match all modules ending in `_proj` use `*_proj`. For example:

@@ -85,9 +85,9 @@ def configure_auto_model_recipe(gpus_per_node, num_nodes) -> run.Partial:
         This recipe uses the SQuAD dataset for fine-tuning.
     """
     recipe = llm.hf_auto_model_for_causal_lm.finetune_recipe(
-        model_name="Qwen/Qwen2.5-1.5B",  # The Hugging Face model-id or path to a local checkpoint (HF-native format).
-        dir="/checkpoints/qwen2.5-1.5b",  # Path to store checkpoints
-        name="qwen2.5_lora",
+        model_name="meta-llama/Llama-3.2-1B",  # The Hugging Face model-id or path to a local checkpoint (HF-native format).
+        dir="/checkpoints/llama3.2_1b",  # Path to store checkpoints
+        name="llama3_lora",
         num_nodes=num_nodes,
         num_gpus_per_node=gpus_per_node,
         peft_scheme="lora",

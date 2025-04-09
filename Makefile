@@ -31,7 +31,7 @@ up: ## Start nemo-run container
 
 .PHONY: run
 run: ## Run application
-	python ./nemo_skypilot_demo.py
+	python ./nemo_skypilot_training.py
 
 .PHONY: down
 down: ## Down skypilot cluster

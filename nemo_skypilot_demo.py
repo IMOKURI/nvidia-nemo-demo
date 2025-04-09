@@ -92,9 +92,9 @@ def configure_auto_model_recipe(gpus_per_node, num_nodes) -> run.Partial:
     Note:
         This recipe uses the SQuAD dataset for fine-tuning.
     """
-    dir = "/checkpoints/gemma2_lora"
-    name = "gemma2_lora"
-    model_name = "google/gemma-2-2b-it"
+    dir = "/checkpoints/gemma2_baku_lora"
+    name = "gemma2_baku_lora"
+    model_name = "rinna/gemma-2-baku-2b-it"
     peft_scheme = "lora"  # or None
 
     tokenizer = llm.HFAutoModelForCausalLM.configure_tokenizer(model_name)

@@ -18,7 +18,7 @@ def main():
     model.to(device)
 
     # Generate text
-    input_text = "To whom did the Virgin Mary allegedly appear in 1858 in Lourdes France?"
+    input_text = "東京の観光名所を教えてください。"
     inputs = tokenizer(input_text, return_tensors="pt").to(device)
     output = model.generate(**inputs, max_length=100)
 

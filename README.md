@@ -31,15 +31,20 @@
   ```bash
   make up
   ```
-- Prepare dataset
+- Prepare dataset (inside the client container)
   ```bash
   make dataset
   ```
-- Run NeMo program
+- Run NeMo program (inside the client container)
   ```bash
   make run
   ```
-- Tear down cluster
+- Run inference (inside the pod)
+  ```bash
+  conda deactivate
+  python /nemo_run/code/nemo_skypilot_inference.py
+  ```
+- Tear down cluster (inside the client container)
   ```bash
   make down
   ```

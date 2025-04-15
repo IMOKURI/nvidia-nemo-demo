@@ -29,6 +29,18 @@ up: ## Start nemo-run container
 		$(IMAGE_NAME):$(IMAGE_TAG) \
 		bash
 
+.PHONY: dataset
+dataset: ## dataset
+	python /opt/NeMo/scripts/nlp_language_modeling/preprocess_data_for_megatron.py \
+		--input=/app/data/mc4-ja-tfrecord_5k.jsonl \
+		--json-keys=text \
+		--tokenizer-library=megatron \
+		--tokenizer-type=GPT2BPETokenizer \
+		--dataset-impl=mmap \
+		--output-prefix=mc4-ja-tfrecord \
+		--append-eod \
+		--workers=48
+
 .PHONY: run
 run: ## Run application
 	python ./nemo_skypilot_training.py

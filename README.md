@@ -14,25 +14,32 @@
       git config --global --add safe.directory /app
       ```
 
+## Preparation
+
+- Download dataset
+  ```bash
+  huggingface-cli download --repo-type dataset --local-dir data/ Atom007/mc4-japanese-data mc4-ja-tfrecord_5k.jsonl
+  ```
+- Download base model
+  ```bash
+  huggingface-cli download rinna/gemma-2-baku-2b-it
+  ```
+
 ## How to Run
 
 - Run client container
   ```bash
-  make run
+  make up
   ```
-- Prepare dataset [`Atom007/mc4-japanese-data`](https://huggingface.co/datasets/Atom007/mc4-japanese-data)
+- Prepare dataset
   ```bash
-  python /opt/NeMo/scripts/nlp_language_modeling/preprocess_data_for_megatron.py \
-      --input=/app/data/mc4-ja-tfrecord_5k.jsonl \
-      --json-keys=text \
-      --tokenizer-library=megatron \
-      --tokenizer-type=GPT2BPETokenizer \
-      --dataset-impl=mmap \
-      --output-prefix=mc4-ja-tfrecord \
-      --append-eod \
-      --workers=48
+  make dataset
   ```
 - Run NeMo program
   ```bash
-  python nemo_skypilot_demo.py
+  make run
+  ```
+- Tear down cluster
+  ```bash
+  make down
   ```

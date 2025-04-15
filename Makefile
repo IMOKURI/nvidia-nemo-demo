@@ -37,7 +37,7 @@ dataset: ## dataset
 		--tokenizer-library=megatron \
 		--tokenizer-type=GPT2BPETokenizer \
 		--dataset-impl=mmap \
-		--output-prefix=mc4-ja-tfrecord \
+		--output-prefix=/app/data/mc4-ja-tfrecord \
 		--append-eod \
 		--workers=48
 

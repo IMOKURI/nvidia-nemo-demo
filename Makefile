@@ -16,26 +16,11 @@ IMAGE_TAG = v0.0.3
 
 .PHONY: build
 build: ## Build nemo-run container
-	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile.skypilot .
+	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile .
 
 .PHONY: push
 push: ## Push nemo-run container
 	docker push $(IMAGE_NAME):$(IMAGE_TAG)
-
-#######################################################################################################################
-# nemo-vllm
-#######################################################################################################################
-VLLM_IMAGE_NAME = imokuri123/nemo-vllm
-VLLM_IMAGE_TAG = v0.0.2
-
-.PHONY: build-vllm
-build-vllm: ## Build nemo-vllm container
-	docker build -t $(VLLM_IMAGE_NAME):$(VLLM_IMAGE_TAG) -f Dockerfile.vllm .
-
-.PHONY: push-vllm
-push-vllm: ## Push nemo-vllm container
-	docker push $(VLLM_IMAGE_NAME):$(VLLM_IMAGE_TAG)
-
 
 #######################################################################################################################
 # operations

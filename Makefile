@@ -78,6 +78,7 @@ down: ## Down skypilot cluster
 .PHONY: up-vllm
 up-vllm: ## Start nemo-vllm container
 	docker run -it --rm \
+		-v $(HOME)/.cache/huggingface:/root/.cache/huggingface \
 		-v $(PWD):/app \
 		-w /app \
 		$(VLLM_IMAGE_NAME):$(VLLM_IMAGE_TAG) \

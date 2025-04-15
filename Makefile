@@ -74,3 +74,11 @@ download: ## Download checkpoints
 .PHONY: down
 down: ## Down skypilot cluster
 	sky down --yes nemo_demo
+
+.PHONY: up-vllm
+up-vllm: ## Start nemo-vllm container
+	docker run -it --rm \
+		-v $(PWD):/app \
+		-w /app \
+		$(VLLM_IMAGE_NAME):$(VLLM_IMAGE_TAG) \
+		bash

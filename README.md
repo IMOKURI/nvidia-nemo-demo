@@ -48,3 +48,14 @@
   ```bash
   make down
   ```
+
+## Check status
+
+- Check status of the cluster
+  ```bash
+  sky status
+  ```
+- Check status of the experiments
+  ```bash
+  nemo experiment status nemo_demo
+  ```

@@ -67,19 +67,6 @@ dataset: ## Preprocess dataset
 run: ## Run application
 	python ./nemo_skypilot_training.py
 
-.PHONY: download
-download: ## Download checkpoints
-	rsync -Pavz nemo_demo:/checkpoints/gemma2_baku_lora checkpoints/
-
 .PHONY: down
 down: ## Down skypilot cluster
 	sky down --yes nemo_demo
-
-.PHONY: up-vllm
-up-vllm: ## Start nemo-vllm container
-	docker run -it --rm \
-		-v $(HOME)/.cache/huggingface:/root/.cache/huggingface \
-		-v $(PWD):/app \
-		-w /app \
-		$(VLLM_IMAGE_NAME):$(VLLM_IMAGE_TAG) \
-		bash

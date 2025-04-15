@@ -1,5 +1,5 @@
 FROM nvcr.io/nvidia/nemo:25.02.01
 
-RUN pip --no-cache-dir install vllm
+RUN pip --no-cache-dir install vllm==0.7.3
 
 CMD ["bash"]

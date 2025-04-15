@@ -180,7 +180,7 @@ def main():
     fn = configure_fn()
     # recipe = configure_recipe(gpus_per_node, num_nodes)
     recipe = configure_auto_model_recipe(gpus_per_node, num_nodes)
-    executor = skypilot_executor("imokuri123/nemo-vllm:v0.0.1", gpus_per_node)
+    executor = skypilot_executor("imokuri123/nemo-vllm:v0.0.2", gpus_per_node)
 
     with run.Experiment("nemo_demo", executor=executor) as experiment:
         experiment.add(fn, tail_logs=True)

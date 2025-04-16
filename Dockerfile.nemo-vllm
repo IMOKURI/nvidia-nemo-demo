@@ -1,5 +1,6 @@
 FROM nvcr.io/nvidia/nemo:25.02.01
 
-RUN pip --no-cache-dir install vllm==0.8.2
+RUN pip --no-cache-dir install -r ./requirements_vllm_0.8.2_common.txt
+RUN pip --no-cache-dir install --no-deps vllm==0.8.2
 
 CMD ["bash"]

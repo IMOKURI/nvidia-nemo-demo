@@ -10,6 +10,8 @@ kubernetes:
               name: nemo-models-volume
             - mountPath: /checkpoints
               name: nemo-checkpoints-volume
+            - mountPath: /code
+              name: nemo-code-volume
       volumes:
         - name: nemo-models-volume
           persistentVolumeClaim:
@@ -17,3 +19,6 @@ kubernetes:
         - name: nemo-checkpoints-volume
           persistentVolumeClaim:
             claimName: nemo-checkpoints-pvc
+        - name: nemo-code-volume
+          persistentVolumeClaim:
+            claimName: nemo-code-pvc

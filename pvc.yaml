@@ -23,3 +23,16 @@ spec:
     requests:
       storage: 30Gi
   storageClassName: edf
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nemo-code-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: edf

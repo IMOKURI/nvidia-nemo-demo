@@ -168,6 +168,7 @@ def skypilot_executor(container_image, gpus_per_node):
         setup="""
         conda deactivate
         nvidia-smi
+        cp -rp /nemo_run/code/* /code/
         """,
     )
 

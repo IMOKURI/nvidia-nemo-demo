@@ -6,9 +6,29 @@ metadata:
 spec:
   containers:
   - name: nemo-vllm
-    image: tutum/dnsutils
+    image: imokuri123/nemo-vllm:v0.0.4
     command:
       - sleep
       - infinity
     imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /root/.cache/huggingface/hub
+        name: nemo-models-volume
+      - mountPath: /checkpoints
+        name: nemo-checkpoints-volume
+      - mountPath: /code
+        name: nemo-code-volume
+    resources:
+      limits:
+        nvidia.com/gpu: 4
   restartPolicy: Always
+  volumes:
+    - name: nemo-models-volume
+      persistentVolumeClaim:
+        claimName: nemo-models-pvc
+    - name: nemo-checkpoints-volume
+      persistentVolumeClaim:
+        claimName: nemo-checkpoints-pvc
+    - name: nemo-code-volume
+      persistentVolumeClaim:
+        claimName: nemo-code-pvc

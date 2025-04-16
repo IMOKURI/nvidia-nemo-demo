@@ -4,11 +4,16 @@ kubernetes:
       containers:
         - env:
             - name: MY_ENV_VAR
-              value: my-value
+              value: "hello world"
           volumeMounts:
+            - mountPath: /root/.cache/huggingface/hub
+              name: nemo-models-volume
             - mountPath: /checkpoints
-              name: nemo-volume
+              name: nemo-checkpoints-volume
       volumes:
-        - name: nemo-volume
+        - name: nemo-models-volume
           persistentVolumeClaim:
-            claimName: nemo-pvc
+            claimName: nemo-models-pvc
+        - name: nemo-checkpoints-volume
+          persistentVolumeClaim:
+            claimName: nemo-checkpoints-pvc

@@ -30,7 +30,7 @@ VLLM_IMAGE_TAG = v0.0.4
 
 .PHONY: build-vllm
 build-vllm: ## Build nemo-vllm container
-	docker build -t $(VLLM_IMAGE_NAME):$(VLLM_IMAGE_TAG) -f Dockerfile.nemo-vllm .
+	docker build -t $(VLLM_IMAGE_NAME):$(VLLM_IMAGE_TAG) -f Dockerfile.nemo-vllm --progress plain .
 
 .PHONY: push-vllm
 push-vllm: ## Push nemo-vllm container

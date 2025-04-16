@@ -57,7 +57,7 @@
 
 - Check status of the cluster
   ```bash
-  sky status
+  sky status --all
   ```
 - Check status of the experiments
   ```bash

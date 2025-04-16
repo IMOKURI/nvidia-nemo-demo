@@ -19,7 +19,12 @@ spec:
       - mountPath: /code
         name: nemo-code-volume
     resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
       limits:
+        cpu: 2
+        memory: 16Gi
         nvidia.com/gpu: 4
   restartPolicy: Always
   volumes:

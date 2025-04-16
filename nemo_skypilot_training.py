@@ -164,7 +164,6 @@ def skypilot_executor(container_image, gpus_per_node):
         cluster_name="nemo_demo",
         file_mounts={
             "/nemo_data": "/app/data",
-            "/checkpoints": "/app/checkpoints",
         },  # なにかマウントしておかないと、/nemo_runのマウントも失敗しているよう。
         setup="""
         conda deactivate

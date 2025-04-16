@@ -6,8 +6,9 @@ kubernetes:
             - name: MY_ENV_VAR
               value: my-value
           volumeMounts:
-            - mountPath: /data
-              name: my-volume
+            - mountPath: /checkpoints
+              name: nemo-volume
       volumes:
-        - name: my-volume
-          emptyDir: {}
+        - name: nemo-volume
+          persistentVolumeClaim:
+            claimName: nemo-pvc

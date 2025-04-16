@@ -27,6 +27,10 @@
 
 ## How to Run
 
+- Create PVC
+  ```bash
+  kubectl apply -f pvc.yaml
+  ```
 - Run client container
   ```bash
   make up

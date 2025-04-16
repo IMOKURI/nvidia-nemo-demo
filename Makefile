@@ -26,7 +26,7 @@ push: ## Push nemo-run container
 # nemo-vllm
 #######################################################################################################################
 VLLM_IMAGE_NAME = imokuri123/nemo-vllm
-VLLM_IMAGE_TAG = v0.0.6
+VLLM_IMAGE_TAG = v0.0.7
 
 .PHONY: build-vllm
 build-vllm: ## Build nemo-vllm container

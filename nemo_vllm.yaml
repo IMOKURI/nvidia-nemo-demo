@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
   - name: nemo-vllm
-    image: imokuri123/nemo-vllm:v0.0.5
+    image: imokuri123/nemo-vllm:v0.0.6
     command:
       - sleep
       - infinity

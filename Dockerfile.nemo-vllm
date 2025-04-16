@@ -4,5 +4,6 @@ COPY requirements_vllm_0.8.2_common.txt /setup/requirements_vllm_0.8.2_common.tx
 COPY requirements_vllm_0.8.2_cuda.txt /setup/requirements_vllm_0.8.2_cuda.txt
 RUN pip --no-cache-dir install -r /setup/requirements_vllm_0.8.2_common.txt
 RUN pip --no-cache-dir install --no-deps -r /setup/requirements_vllm_0.8.2_cuda.txt
+RUN pip --no-cache-dir install --no-deps vllm==0.8.2
 
 CMD ["bash"]

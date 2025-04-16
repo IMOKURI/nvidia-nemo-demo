@@ -1,0 +1,13 @@
+kubernetes:
+  pod_config:
+    spec:
+      containers:
+        - env:
+            - name: MY_ENV_VAR
+              value: my-value
+          volumeMounts:
+            - mountPath: /data
+              name: my-volume
+      volumes:
+        - name: my-volume
+          emptyDir: {}

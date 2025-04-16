@@ -31,6 +31,7 @@ up: ## Start nemo-run container
 		-v $(HOME)/.kube:/root/.kube \
 		-v $(HOME)/.gitconfig:/root/.gitconfig \
 		-v $(PWD):/app \
+		-v $(PWD)/sky/config.yaml:/root/.sky/config.yaml \
 		-w /app \
 		-e SKYPILOT_DISABLE_USAGE_COLLECTION=1 \
 		$(IMAGE_NAME):$(IMAGE_TAG) \

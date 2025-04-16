@@ -1,7 +1,8 @@
 FROM nvcr.io/nvidia/nemo:25.02.01
 
 COPY requirements_vllm_0.8.2_common.txt /setup/requirements_vllm_0.8.2_common.txt
+COPY requirements_vllm_0.8.2_cuda.txt /setup/requirements_vllm_0.8.2_cuda.txt
 RUN pip --no-cache-dir install -r /setup/requirements_vllm_0.8.2_common.txt
-RUN pip --no-cache-dir install --no-deps vllm==0.8.2
+RUN pip --no-cache-dir install --no-deps -r /setup/requirements_vllm_0.8.2_cuda.txt
 
 CMD ["bash"]
